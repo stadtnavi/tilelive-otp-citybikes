@@ -48,6 +48,7 @@ class GeoJSONSource {
         maxZoom: 20,
         buffer: 256
       }); //TODO: this should be configurable
+      console.log("city bikes loaded from:", uri.host + uri.path)
       callback(null, this)
     }.bind(this));
   };
@@ -58,7 +59,7 @@ class GeoJSONSource {
     if (tile === null){
       tile = {features: []}
     }
-    
+
     const data = Buffer.from(vtPbf.fromGeojsonVt({stations: tile}));
 
     zlib.gzip(data, function (err, buffer) {
