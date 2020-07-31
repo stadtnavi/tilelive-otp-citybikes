@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "hannesj",
   "license": "ISC",
   "dependencies": {
     "geojson-vt": "^2.1.8",
     "requestretry": "^1.6.0",
-    "vt-pbf": "^2.0.2"
+    "vt-pbf": "^2.0.2",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.2"
   }
 }

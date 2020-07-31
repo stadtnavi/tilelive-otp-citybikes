@@ -15,11 +15,15 @@ const query = `
     }
   }`
 
-class GeoJSONSource {
+class OtpCityBikeSource {
   constructor(uri, callback){
-    uri.protocol = "http:"
+    this.uri = uri;
+    callback(null, this);
+  };
+
+  fetchBikeRentals(callback) {
     request({
-      url: uri,
+      url: this.uri,
       body: query,
       maxAttempts: 120,
       retryDelay: 30000,
@@ -44,32 +48,35 @@ class GeoJSONSource {
         }
       }))}
 
-      this.tileIndex = geojsonVt(geoJSON, {
+      const tileIndex = geojsonVt(geoJSON, {
         maxZoom: 20,
         buffer: 256
       }); //TODO: this should be configurable
-      console.log("city bikes loaded from:", uri.host + uri.path)
-      callback(null, this)
+      console.log(`${geoJSON.features.length} city bikes loaded from ${this.uri.href}`);
+
+      callback(geojsonVt(geoJSON));
     }.bind(this));
-  };
+  }
 
   getTile(z, x, y, callback){
-    let tile = this.tileIndex.getTile(z, x, y)
+    this.fetchBikeRentals(function(tileIndex){
+      let tile = tileIndex.getTile(z, x, y)
 
-    if (tile === null){
-      tile = {features: []}
-    }
-
-    const data = Buffer.from(vtPbf.fromGeojsonVt({stations: tile}));
-
-    zlib.gzip(data, function (err, buffer) {
-      if (err){
-        callback(err);
-        return;
+      if (tile === null){
+        tile = {features: []}
       }
 
-      callback(null, buffer, {"content-encoding": "gzip"})
-    })
+      const data = Buffer.from(vtPbf.fromGeojsonVt({stations: tile}));
+
+      zlib.gzip(data, function (err, buffer) {
+        if (err){
+          callback(err);
+          return;
+        }
+
+        callback(null, buffer, {"content-encoding": "gzip"})
+      })
+    });
   }
 
   getInfo(callback){
@@ -86,8 +93,8 @@ class GeoJSONSource {
   }
 }
 
-module.exports = GeoJSONSource
+module.exports = OtpCityBikeSource
 
 module.exports.registerProtocols = (tilelive) => {
-  tilelive.protocols['otpcitybikes:'] = GeoJSONSource
+  tilelive.protocols['otpcitybikes:'] = OtpCityBikeSource
 }
