@@ -1,5 +1,6 @@
 var assert = require("assert");
 var OtpCityBikeSource = require("./index");
+var URL = require("url").URL;
 
 describe("CityBikeSource", function() {
   it("fetch data", (done) => {
