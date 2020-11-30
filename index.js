@@ -50,11 +50,11 @@ class OtpCityBikeSource {
 
       const tileIndex = geojsonVt(geoJSON, {
         maxZoom: 20,
-        buffer: 256
-      }); //TODO: this should be configurable
+        buffer: 512
+      });
       console.log(`${geoJSON.features.length} city bikes loaded from ${this.uri.href}`);
 
-      callback(geojsonVt(geoJSON));
+      callback(tileIndex);
     }.bind(this));
   }
 
