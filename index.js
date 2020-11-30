@@ -54,13 +54,18 @@ class OtpCityBikeSource {
       });
       console.log(`${geoJSON.features.length} city bikes loaded from ${this.uri.href}`);
 
-      callback(tileIndex);
+      callback(null, tileIndex);
     }.bind(this));
   }
 
   getTile(z, x, y, callback){
-    this.fetchBikeRentals(function(tileIndex){
-      let tile = tileIndex.getTile(z, x, y)
+    this.fetchBikeRentals(function(err, tileIndex){
+      if (err) {
+        console.log("Error while fetching citybike data:", err);
+        callback(err);
+      }
+
+      let tile = tileIndex.getTile(z, x, y);
 
       if (tile === null){
         tile = {features: []}
