@@ -18,6 +18,9 @@ const query = `
 class OtpCityBikeSource {
   constructor(uri, callback){
     this.uri = uri;
+    if(uri.protocol.startsWith("otpcitybikes")) {
+      uri.protocol = "http:";
+    }
     callback(null, this);
   };
 
