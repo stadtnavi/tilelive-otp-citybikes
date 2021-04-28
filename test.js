@@ -4,8 +4,7 @@ var URL = require("url").URL;
 
 describe("CityBikeSource", function() {
   it("fetch data", (done) => {
-    const url = new URL("https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql");
-    const source = new OtpCityBikeSource(url, () => {});
+    const source = new OtpCityBikeSource(null, () => {});
     assert.ok(source);
 
     // request tile in Helsinki

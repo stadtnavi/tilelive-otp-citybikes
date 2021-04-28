@@ -4,6 +4,8 @@ const vtPbf = require('vt-pbf');
 const request = require('requestretry');
 const zlib = require('zlib');
 
+const url = process.env.GRAPHQL_URL || "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";
+
 const query = `
   query bikerentals {
     bikeRentalStations {
@@ -17,10 +19,7 @@ const query = `
 
 class OtpCityBikeSource {
   constructor(uri, callback){
-    this.uri = uri;
-    if(uri.protocol.startsWith("otpcitybikes")) {
-      uri.protocol = "http:";
-    }
+    this.uri = url;
     callback(null, this);
   };
 
